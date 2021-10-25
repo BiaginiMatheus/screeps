@@ -1,3 +1,5 @@
+const constants = require('constants')
+
 module.exports = {
     run: function(creep){
         if(creep.store.energy == creep.store.getCapacity()){
@@ -9,11 +11,13 @@ module.exports = {
         if(!(creep.memory.working) && creep.store.getFreeCapacity() > 0) {
             var containers = creep.room.find(FIND_STRUCTURES, {
                 filter: (structure) => {
-                    return (structure.structureType == STRUCTURE_CONTAINER) && (structure.store[RESOURCE_ENERGY] > 0);
+                    return (structure.structureType == STRUCTURE_CONTAINER);
                 }
             })
             var src = creep.pos.findClosestByPath(containers)
-            if(creep.withdraw(src, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+            if(containers[0].store[RESOURCE_ENERGY] < creep.store.getCapacity()){
+                creep.moveTo(constants.WAIT_COORDINATES.X, constants.WAIT_COORDINATES.Y, {visualizePathStyle: {stroke: '#00ffff'}});
+            }else if(creep.withdraw(src, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(src);
             }
         }else{
@@ -25,10 +29,10 @@ module.exports = {
             if(containersNeedingRepair.length && creep.repair(containersNeedingRepair[0]) == ERR_NOT_IN_RANGE){
                 creep.moveTo(containersNeedingRepair[0], {visualizePathStyle: {stroke: '#ffffff'}});
             }else{
-                var targets = creep.room.find(FIND_CONSTRUCTION_SITES);
-                if(targets.length) {
-                    if(creep.build(targets[0]) == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#ffffff'}});
+                var target = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
+                if(target) {
+                    if(creep.build(target) == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});
                     }
                 }   
             }

@@ -7,8 +7,8 @@ module.exports = Object.freeze({
         SOLDIER: 5
     },
     MAX:{
-        HARVESTER: 2,
-        MINER: 6,
+        HARVESTER: 5,
+        MINER: 8,
         UPGRADER: 5,
         BUILDER: 3,
         SOLDIER: 4
@@ -52,8 +52,8 @@ module.exports = Object.freeze({
         FREE_Y2:39
     },
     WAIT_COORDINATES:{
-        X: 34,
-        Y: 30
+        X: 21,
+        Y: 26
     },
     JOBS:4,
     DEFAULT:2
