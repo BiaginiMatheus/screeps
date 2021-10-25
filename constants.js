@@ -8,8 +8,8 @@ module.exports = Object.freeze({
     },
     MAX:{
         HARVESTER: 2,
-        MINER: 7,
-        UPGRADER: 8,
+        MINER: 6,
+        UPGRADER: 5,
         BUILDER: 3,
         SOLDIER: 4
     },
@@ -55,5 +55,6 @@ module.exports = Object.freeze({
         X: 34,
         Y: 30
     },
-    JOBS:4
+    JOBS:4,
+    DEFAULT:2
 });
