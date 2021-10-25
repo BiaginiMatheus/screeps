@@ -9,8 +9,8 @@ module.exports = Object.freeze({
     MAX:{
         HARVESTER: 2,
         MINER: 7,
-        UPGRADER: 6,
-        BUILDER: 6,
+        UPGRADER: 8,
+        BUILDER: 3,
         SOLDIER: 4
     },
     ID:{

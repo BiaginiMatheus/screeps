@@ -13,7 +13,7 @@ module.exports = {
                     "Upgraders: "+upgraders+'\n'+
                     "Builders: "+builders+'\n');
         if(harvesters < constants.MAX.HARVESTER){
-           for(var name in Game.creeps){
+           for(let name in Game.creeps){
               if(Game.creeps[name].memory.role==constants.ROLE.HARVESTER){
                 harvester=Game.creeps[name];
               }
@@ -27,7 +27,7 @@ module.exports = {
              var amountCreep = _.sum(Game.creeps, (creep) => creep.memory.role == i);
              if(amountCreep == 0){
             console.log("There are no creeps with job "+i+", trying to spawnn a generic one, right now");
-                Game.spawns[constants.SPAWN_NAME].createCreep([WORK, CARRY, MOVE, MOVE], name,{role:i});
+                Game.spawns[constants.SPAWN_NAME].createCreep([WORK, CARRY, MOVE, MOVE], 'emergency_role_'+i,{role:i});
              }
         }
         if(miners < constants.MAX.MINER){
@@ -40,7 +40,8 @@ module.exports = {
             name = 'builder_' + Game.time;
             Game.spawns[constants.SPAWN_NAME].createCreep([WORK, CARRY, MOVE, MOVE], name,{role:constants.ROLE.BUILDER});
         }else{
-            Game.spawns[constants.SPAWN_NAME].createCreep([WORK, CARRY, MOVE, MOVE], name,{role:constants.ROLE.MINER});
+            name = 'upgrader_' + Game.time;
+            Game.spawns[constants.SPAWN_NAME].createCreep([WORK, CARRY, MOVE, MOVE], name,{role:constants.ROLE.UPGRADER});
         }
     }
 
