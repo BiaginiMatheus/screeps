@@ -16,6 +16,7 @@ module.exports.canGoRestrictedArea = () => {
             }   
         }
         if(isAtSrc && count>constants.RESTRICTED_AREA.LIMIT){
+            console.log('Creeps with restriction can\'t move right now');
             return false;
         }else{
             return true;

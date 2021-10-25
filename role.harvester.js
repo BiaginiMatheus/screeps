@@ -21,10 +21,24 @@ module.exports = {
                 }
             })
             var src = creep.pos.findClosestByPath(containers)
-            if(containers[0].store[RESOURCE_ENERGY] < creep.store.getCapacity()){
-                var code = creep.moveTo(constants.WAIT_COORDINATES.X, constants.WAIT_COORDINATES.Y, {visualizePathStyle: {stroke: '#00ffff'}});
+            if(containers[0].store[RESOURCE_ENERGY] < creep.store.getCapacity()*1.5){
+                var energySrc = creep.pos.findClosestByRange(FIND_SOURCES);
+                if(creep.harvest(energySrc) == ERR_NOT_IN_RANGE) {
+                    if(utils.canGoRestrictedArea()){
+                        var code = creep.moveTo(energySrc);
+                        console.log('Creep '+creep.name+' is going to harvest from the source');
+                        if(code!=0){
+                            console.log('Creep not moving, error code: '+code);
+                        }
+                    }else{
+                        utils.freePassage();
+                    }
+                }
             }else if(creep.withdraw(src, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(src);
+                var code = creep.moveTo(src);
+                if(code!=0){
+                    console.log('Creep not moving, error code: '+code);
+                }
             }
         }else{
             var targets = creep.room.find(FIND_STRUCTURES, {
@@ -35,7 +49,10 @@ module.exports = {
             });
             if(targets.length > 0) {
                 if(creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#0000FF'}});
+                    var code = creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#0000FF'}});
+                    if(code!=0){
+                        console.log('Creep not moving, error code: '+code);
+                    }   
                 }
             }
         }
