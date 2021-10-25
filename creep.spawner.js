@@ -24,19 +24,19 @@ module.exports = {
         }
         if(miners < constants.MAX.MINER){
             name = 'miner_' + Game.time;
-            Game.spawns[constants.SPAWN_NAME].createCreep([WORK, WORK, CARRY, MOVE, MOVE], name,{role:constants.ROLE.MINER});
+            Game.spawns[constants.SPAWN_NAME].createCreep([WORK, CARRY, CARRY, MOVE, MOVE, MOVE], name,{role:constants.ROLE.MINER});
         }else if(harvesters < constants.MAX.HARVESTER){
            name = 'harvester_' + Game.time;
-           Game.spawns[constants.SPAWN_NAME].createCreep([WORK, WORK, CARRY, MOVE, MOVE], name,{role:constants.ROLE.HARVESTER});
+           Game.spawns[constants.SPAWN_NAME].createCreep([WORK,CARRY, CARRY, MOVE, MOVE, MOVE], name,{role:constants.ROLE.HARVESTER});
         }else if(upgraders < constants.MAX.UPGRADER){
             name = 'upgrader_' + Game.time;
-            Game.spawns[constants.SPAWN_NAME].createCreep([WORK, CARRY, CARRY, CARRY, MOVE, MOVE], name,{role:constants.ROLE.UPGRADER});
+            Game.spawns[constants.SPAWN_NAME].createCreep([WORK, CARRY, CARRY, MOVE, MOVE, MOVE], name,{role:constants.ROLE.UPGRADER});
         }else if(builders < constants.MAX.BUILDER){
             name = 'builder_' + Game.time;
-            Game.spawns[constants.SPAWN_NAME].createCreep([WORK, WORK, CARRY, MOVE, MOVE], name,{role:constants.ROLE.BUILDER});
+            Game.spawns[constants.SPAWN_NAME].createCreep([WORK, CARRY, CARRY, MOVE, MOVE, MOVE], name,{role:constants.ROLE.BUILDER});
         }else{
-            name = 'default_'+constants.DEFAULT+'_'+ Game.time;
-            Game.spawns[constants.SPAWN_NAME].createCreep([WORK, WORK, CARRY, MOVE, MOVE], name,{role:constants.DEFAULT});
+            name = 'default_'+constants.DEFAULT_SPAWN+'_'+ Game.time;
+            Game.spawns[constants.SPAWN_NAME].createCreep([WORK, CARRY, CARRY, MOVE, MOVE, MOVE], name,{role:constants.DEFAULT_SPAWN});
         }
     }
 };
