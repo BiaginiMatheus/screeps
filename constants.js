@@ -11,7 +11,7 @@ module.exports = Object.freeze({
         MINER: 8,
         UPGRADER: 5,
         BUILDER: 3,
-        SOLDIER: 4
+        SOLDIER: 3
     },
     ID:{
         SPAWN:'6173664ccfad2826f0d140ee',

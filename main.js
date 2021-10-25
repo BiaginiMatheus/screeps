@@ -2,6 +2,7 @@ const roleHarvester = require('role.harvester');
 const roleUpgrader = require('role.upgrader');
 const roleMiner = require('role.miner');
 const roleBuilder = require('role.builder');
+const roleSoldier = require('role.soldier');
 
 const spawner = require('creep.spawner');
 
@@ -26,7 +27,7 @@ module.exports.loop = function () {
                 roleBuilder.run(creep);
                 break;
             case constants.ROLE.SOLDIER:
-                roleMiner.run(creep);
+                roleSoldier.run(creep);
                 break;
             case constants.ROLE.HEALER:
                 roleMiner.run(creep);
