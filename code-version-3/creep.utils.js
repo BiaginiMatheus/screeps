@@ -2,6 +2,7 @@ const constants = require('constants')
 
 const minePos1 = new RoomPosition(constants.POS_MINE.SRC1.X, constants.POS_MINE.SRC1.Y, constants.ROOM.MINE);
 const minePos2 = new RoomPosition(constants.POS_MINE.SRC2.X, constants.POS_MINE.SRC2.Y, constants.ROOM.MINE);
+const resPos3 = new RoomPosition(constants.POS_RES.SRC3.X, constants.POS_RES.SRC3.Y, constants.ROOM.RIGHT);
 
 const waitPos = new RoomPosition(constants.WAIT_COORDINATES.CARRIER.X, constants.WAIT_COORDINATES.CARRIER.Y, constants.ROOM.MINE);
 
@@ -14,6 +15,9 @@ module.exports.freePathToSpawn = (creep) => {
         Game.spawns[constants.SPAWN_NAME].spawning)){
         creep.moveTo(waitPos);
         return false;
+    }
+    if(creep.pos.isEqualTo(resPos3)){
+        creep.moveTo(waitPos)
     }
     return true;
 };

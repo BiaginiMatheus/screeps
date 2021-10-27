@@ -11,9 +11,9 @@ module.exports = Object.freeze({
     MAX:{
         MINER: 3,
         CARRIER: {
-            TYPE1: 2,
-            TYPE2: 5,
-            TYPE3: 2
+            TYPE1: 3,
+            TYPE2: 3,
+            TYPE3: 3
         },
         UPGRADER: 3,
         BUILDER: 3,
