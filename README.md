@@ -53,3 +53,21 @@ Advantages:
 -Faster
 -Almost as stable as version 1
 ````
+
+## Code version 3
+Strategy: A whole new strategy was formed based on my neighbor's behavior.
+One miner creep stays still mining the source and dropping the energy, while a carrier creep pick this energy and uses it to refill the container or the spawner.
+Extra change: mining in my Room and the room at my right
+
+Problem:
+````
+-High use of CPUs.
+-Lots of fail-safes that increases code complexity
+```` 
+
+Advantages:
+````
+-Much Faster
+-More stable than version 1
+-Using the full capacity of the extensions
+````
