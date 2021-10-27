@@ -4,10 +4,10 @@ const roleUpgrader = require('role.upgrader');
 
 const resPos1 = new RoomPosition(constants.POS_RES.SRC1.X, constants.POS_RES.SRC1.Y, constants.ROOM.MINE);
 const resPos2 = new RoomPosition(constants.POS_RES.SRC2.X, constants.POS_RES.SRC2.Y, constants.ROOM.MINE);
+const resPos3 = new RoomPosition(constants.POS_RES.SRC3.X, constants.POS_RES.SRC3.Y, constants.ROOM.RIGHT);
 
 const minePos1 = new RoomPosition(constants.POS_MINE.SRC1.X, constants.POS_MINE.SRC1.Y, constants.ROOM.MINE);
 const minePos2 = new RoomPosition(constants.POS_MINE.SRC2.X, constants.POS_MINE.SRC2.Y, constants.ROOM.MINE);
-
 const minePos3 = new RoomPosition(constants.POS_MINE.SRC3.X, constants.POS_MINE.SRC3.Y, constants.ROOM.RIGHT);
 
 const waitPos = new RoomPosition(constants.WAIT_COORDINATES.MINER.X, constants.WAIT_COORDINATES.MINER.Y, constants.ROOM.MINE);
@@ -80,7 +80,7 @@ module.exports = {
                     structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
             }
         });
-        const mining =[[resPos1, spawnAndExtensions], [resPos2, containers], [minePos3, containers]];
+        const mining =[[resPos1, spawnAndExtensions], [resPos2, containers], [resPos3, containers]];
         var targetToFill = creep.pos.findClosestByPath(mining[creep.memory.pos][1]);
         if(!creep.memory.working && utils.freePathToSpawn(creep)){
             var dropped = creep.room.find(FIND_DROPPED_RESOURCES,{

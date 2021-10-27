@@ -9,7 +9,7 @@ const resPos2 = new RoomPosition(constants.POS_RES.SRC2.X, constants.POS_RES.SRC
 module.exports = {
     run: function(creep){
         creep = utils.isWorking(creep);
-        if(!(creep.memory.working) && creep.store.getFreeCapacity() > 0) {
+        if(!(creep.memory.working)) {
             var containers = creep.room.find(FIND_STRUCTURES, {
                 filter: (structure) => {
                     return (structure.structureType == STRUCTURE_CONTAINER);
