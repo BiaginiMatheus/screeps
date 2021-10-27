@@ -13,16 +13,20 @@ module.exports = {
                     "Upgraders: "+upgraders+'\n'+
                     "Builders: "+builders+'\n');
         if(harvesters < constants.MAX.HARVESTER){
+           if(harvesters==0){
+               name = 'harvester_' + Game.time;
+               console.log("spawning a harvester")
+               Game.spawns[constants.SPAWN_NAME].createCreep([WORK, WORK, CARRY, MOVE], name,{role:constants.ROLE.HARVESTER});
+               return;
+           }
            for(var name in Game.creeps){
               if(Game.creeps[name].memory.role==constants.ROLE.HARVESTER){
                 var harvester=Game.creeps[name];
               }
            }
-           if(harvester && harvester.ticksToLive<1000){
+           if(harvester.ticksToLive<1000){
+               console.log("spawning a 2nd harvester")
                name = 'harvester_' + Game.time;
-               Game.spawns[constants.SPAWN_NAME].createCreep([WORK, WORK, CARRY, MOVE], name,{role:constants.ROLE.HARVESTER});
-           }
-           if(harvesters==0){
                Game.spawns[constants.SPAWN_NAME].createCreep([WORK, WORK, CARRY, MOVE], name,{role:constants.ROLE.HARVESTER});
            }
         }
