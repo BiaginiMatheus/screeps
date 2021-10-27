@@ -3,10 +3,10 @@ const constants = require('constants')
 function callHero(carriers){
     if(carriers==0){
         name = 'carrier_' + Game.time;
-        Game.spawns[constants.SPAWN_NAME].createCreep([MOVE, CARRY, MOVE, CARRY, MOVE, CARRY], name,{role:constants.ROLE.CARRIER});
+        spawnCreep([MOVE, CARRY, MOVE, CARRY, MOVE, CARRY], name,{role:constants.ROLE.CARRIER});
     }else{
         name=='hero';
-        Game.spawns[constants.SPAWN_NAME].createCreep([WORK, WORK, CARRY, MOVE], name,{role:constants.ROLE.HERO});
+        spawnCreep([WORK, WORK, CARRY, MOVE], name,{role:constants.ROLE.HERO});
     }
 }
 
@@ -46,7 +46,7 @@ function spawnWorker(name, role){
         body[i]=MOVE;
         body[i+1]=CARRY;
         parts+=2;
-        if(parts<(teste-3)){
+        if(parts<(maxSmallPieces()-3)){
             body[i+2]=WORK;
             body[i+3]=MOVE;
             i+=2;   
@@ -71,7 +71,7 @@ function spawnCarrier(name, role, pos){
         body[i]=MOVE;
         body[i+1]=CARRY;
     }
-    spawnCreep(body, name, {role:constants.ROLE.CARRIER, pos});
+    spawnCreep(body, name, {role, pos});
 }
 
 function spawnMiner(name, role){
@@ -97,14 +97,16 @@ module.exports = {
     run: function(){
         var minersAlive = _.sum(Game.creeps, (creep) => (creep.memory.role == constants.ROLE.MINER &&
                                     creep.ticksToLive > constants.TICKS_CLOSER_DEATH));
-        var carriers = _.sum(Game.creeps, (creep) => creep.memory.role == constants.ROLE.CARRIER);
+        var carriers1 = _.sum(Game.creeps, (creep) => (creep.memory.role == constants.ROLE.CARRIER && creep.memory.pos == 0))
+        var carriers2 = _.sum(Game.creeps, (creep) => (creep.memory.role == constants.ROLE.CARRIER && creep.memory.pos == 1))
+        var carriers3 = _.sum(Game.creeps, (creep) => (creep.memory.role == constants.ROLE.CARRIER && creep.memory.pos == 2))
         var rechargers = _.sum(Game.creeps, (creep) => creep.memory.role == constants.ROLE.RECHARGER);
         var miners = _.sum(Game.creeps, (creep) => creep.memory.role == constants.ROLE.MINER);
         var builders = _.sum(Game.creeps, (creep) => creep.memory.role == constants.ROLE.BUILDER);
         var upgraders = _.sum(Game.creeps, (creep) => creep.memory.role == constants.ROLE.UPGRADER);
         var hostiles = Game.rooms[constants.ROOM.MINE].find(FIND_HOSTILE_CREEPS);
         
-        console.log("Carriers: "+carriers+'\n'+logCarriers()+
+        console.log("Carriers: "+(carriers1+carriers2+carriers3)+'\n'+logCarriers()+
                     "Miners: "+miners+'\n'+
                     "Upgraders: "+upgraders+'\n'+
                     "Builders: "+builders+'\n'+
@@ -126,14 +128,14 @@ module.exports = {
                 return;
             }
         }
-        if(carriers<1 || minersAlive < 1){
-            callHero(carriers);
+        if(carriers1<1 || minersAlive < 1){
+            callHero(carriers1);
             return;
         }
         if(minersAlive < constants.MAX.MINER){
             name = 'miner_' + Game.time;
             spawnMiner(name, constants.ROLE.MINER);
-        }else if(carriers < (constants.MAX.CARRIER.TYPE1+constants.MAX.CARRIER.TYPE2+constants.MAX.CARRIER.TYPE3)){
+        }else if(carriers1 < constants.MAX.CARRIER.TYPE1 || carriers2 < constants.MAX.CARRIER.TYPE2 || carriers3 < constants.MAX.CARRIER.TYPE3){
             name = 'carrier_' + Game.time;
             spawnCarrier(name, constants.ROLE.CARRIER);
         }else if(rechargers < constants.MAX.RECHARGER){
@@ -152,7 +154,7 @@ module.exports = {
                 spawnWorker(name, constants.DEFAULT_SPAWN);
             }else{
                 name = 'carrier_' + Game.time;
-                spawnCarrier(name, constants.ROLE.RECHARGER, 1);
+                spawnCarrier(name, constants.ROLE.CARRIER, 1);
             }
         }
     }

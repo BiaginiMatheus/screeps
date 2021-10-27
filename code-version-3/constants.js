@@ -13,7 +13,7 @@ module.exports = Object.freeze({
         CARRIER: {
             TYPE1: 3,
             TYPE2: 3,
-            TYPE3: 3
+            TYPE3: 4
         },
         UPGRADER: 3,
         BUILDER: 3,
@@ -64,8 +64,8 @@ module.exports = Object.freeze({
             Y: 38
         },
         CARRIER:{
-            X:22,
-            Y:40
+            X:25,
+            Y:41
         },
         UPGRADER:{
             X:24,
@@ -75,5 +75,6 @@ module.exports = Object.freeze({
             Y:30
         }
     },
+    MAX_PROX_SPAWN: 5,
     DEFAULT_SPAWN:3
 });
