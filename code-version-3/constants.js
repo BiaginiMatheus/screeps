@@ -10,12 +10,12 @@ module.exports = Object.freeze({
     MAX:{
         MINER: 3,
         CARRIER: {
-            TYPE1: 2,
+            TYPE1: 3,
             TYPE2: 5,
             TYPE3: 2
         },
         UPGRADER: 3,
-        BUILDER: 2,
+        BUILDER: 3,
         SOLDIER: 2
     },
     ID:{
@@ -54,7 +54,7 @@ module.exports = Object.freeze({
         MINE:'W43N37',
         RIGHT:'W42N37'
     },
-    TICKS_CLOSER_DEATH: 100,
+    TICKS_CLOSER_DEATH: 50,
     SPAWN_NAME: 'BiaginiSpawn',
     WAIT_COORDINATES:{
         MINER:{

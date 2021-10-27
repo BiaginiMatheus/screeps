@@ -54,10 +54,10 @@ module.exports = {
             Game.spawns[constants.SPAWN_NAME].createCreep([MOVE, CARRY, MOVE, CARRY, MOVE, CARRY], name,{role:constants.ROLE.CARRIER});
         }else if(builders!=0 && upgraders< constants.MAX.UPGRADER){
             name = 'upgrader_' + Game.time;
-            Game.spawns[constants.SPAWN_NAME].createCreep([MOVE, CARRY, MOVE, CARRY, MOVE, WORK], name,{role:constants.ROLE.BUILDER});
-        }else if(builders< constants.MAX.BUILDER){
-            name = 'builder_' + Game.time;
             Game.spawns[constants.SPAWN_NAME].createCreep([MOVE, CARRY, MOVE, CARRY, MOVE, WORK], name,{role:constants.ROLE.UPGRADER});
+        }else if(builders<constants.MAX.BUILDER){
+            name = 'builder_' + Game.time;
+            Game.spawns[constants.SPAWN_NAME].createCreep([MOVE, CARRY, MOVE, CARRY, MOVE, WORK], name,{role:constants.ROLE.BUILDER});
         }else{
             if(fillingContainers>0){
                 name = 'default_' + constants.DEFAULT_SPAWN +"_"+Game.time;
