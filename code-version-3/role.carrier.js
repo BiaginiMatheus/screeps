@@ -12,6 +12,8 @@ const minePos3 = new RoomPosition(constants.POS_MINE.SRC3.X, constants.POS_MINE.
 
 const waitPos = new RoomPosition(constants.WAIT_COORDINATES.MINER.X, constants.WAIT_COORDINATES.MINER.Y, constants.ROOM.MINE);
 
+const spawn = Game.spawns[constants.SPAWN_NAME];
+
 function canAssign(creeps, i){
     switch(i){
         case 0:
@@ -57,6 +59,7 @@ module.exports = {
                 var creepsWithPosition = _.sum(Game.creeps, (c) => (c.memory.role == constants.ROLE.CARRIER) &&
                                                 c.memory.pos!=undefined && c.memory.pos==i);
                 if(canAssign(creepsWithPosition, i)){
+                    console.log('New harvester type '+i+' assigned');
                     creep.memory.pos=i;   
                     return;
                 }
@@ -78,6 +81,7 @@ module.exports = {
             }
         });
         const mining =[[resPos1, spawnAndExtensions], [resPos2, containers], [minePos3, containers]];
+        var targetToFill = creep.pos.findClosestByPath(mining[creep.memory.pos][1]);
         if(!creep.memory.working && utils.freePathToSpawn(creep)){
             var dropped = creep.room.find(FIND_DROPPED_RESOURCES,{
                 filter: (resource) => {
@@ -102,8 +106,8 @@ module.exports = {
                     }
                 }
             }
-        }else if(utils.freePathToSpawn(creep) && creep.transfer((mining[creep.memory.pos][1])[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
-            creep.moveTo((mining[creep.memory.pos][1])[0]);
+        }else if(utils.freePathToSpawn(creep) && creep.transfer(targetToFill, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
+            creep.moveTo(targetToFill);
         }else if(creep.transfer((mining[creep.memory.pos][1])[0], RESOURCE_ENERGY) == ERR_INVALID_TARGET){
             var extensions = creep.room.find(FIND_STRUCTURES, {
                 filter: (structure) => {

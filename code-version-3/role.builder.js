@@ -1,4 +1,5 @@
 const constants = require('constants')
+const utils = require('creep.utils')
 
 const waitPos = new RoomPosition(constants.WAIT_COORDINATES.BUILDER.X, constants.WAIT_COORDINATES.BUILDER.Y, constants.ROOM.MINE);
 
@@ -7,12 +8,7 @@ const resPos2 = new RoomPosition(constants.POS_RES.SRC2.X, constants.POS_RES.SRC
 
 module.exports = {
     run: function(creep){
-        if(creep.store.energy == creep.store.getCapacity()){
-            creep.memory.working=true;    
-        }
-        if(creep.store.energy==0){
-            creep.memory.working = false;
-        }
+        creep = utils.isWorking(creep);
         if(!(creep.memory.working) && creep.store.getFreeCapacity() > 0) {
             var containers = creep.room.find(FIND_STRUCTURES, {
                 filter: (structure) => {

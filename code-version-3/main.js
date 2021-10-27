@@ -4,6 +4,7 @@ const roleMiner = require('role.miner');
 const roleCarrier = require('role.carrier');
 const roleBuilder = require('role.builder');
 const roleSoldier = require('role.soldier');
+const roleRecharger = require('role.recharger');
 
 const spawner = require('creep.spawner');
 
@@ -33,6 +34,9 @@ module.exports.loop = function () {
                 break;
             case constants.ROLE.HERO:
                 roleHero.run(creep);
+                break;
+            case constants.ROLE.RECHARGER:
+                roleRecharger.run(creep);
                 break;
             default:
                 console.log("Creep "+creep.name+" not working, role: "+creep.memory.role);

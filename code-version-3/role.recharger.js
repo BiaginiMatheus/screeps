@@ -3,6 +3,8 @@ const utils = require('creep.utils');
 
 const waitPos = new RoomPosition(constants.WAIT_COORDINATES.UPGRADER.X, constants.WAIT_COORDINATES.UPGRADER.Y, constants.ROOM.MINE);
 
+const spawn = Game.spawns[constants.SPAWN_NAME];
+
 module.exports = {
     run: function(creep) {
         creep = utils.isWorking(creep);
@@ -20,9 +22,19 @@ module.exports = {
                     creep.moveTo(waitPos);
                 }
             }
-        }else if(creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
-            var code = creep.moveTo(creep.room.controller, {visualizePathStyle: {stroke: '#ff0000'}});
         }else{
+            var extensions = creep.room.find(FIND_STRUCTURES, {
+                filter: (structure) => {
+                    return structure.structureType == STRUCTURE_EXTENSION &&
+                        structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+                }
+            });
+            var target = creep.pos.findClosestByPath(extensions);
+            if(target!=null && creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
+                creep.moveTo(target);
+            }else if(creep.transfer(spawn, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
+                creep.moveTo(spawn);
+            }
         }
     }
 };

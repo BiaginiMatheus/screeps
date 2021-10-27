@@ -5,18 +5,20 @@ module.exports = Object.freeze({
         UPGRADER: 3,
         BUILDER: 4,
         SOLDIER: 5,
-        HERO: 6
+        RECHARGER: 6,
+        HERO: 7
     },
     MAX:{
         MINER: 3,
         CARRIER: {
-            TYPE1: 3,
+            TYPE1: 2,
             TYPE2: 5,
             TYPE3: 2
         },
         UPGRADER: 3,
         BUILDER: 3,
-        SOLDIER: 2
+        SOLDIER: 2,
+        RECHARGER: 2
     },
     ID:{
         SPAWN:'6173664ccfad2826f0d140ee',
