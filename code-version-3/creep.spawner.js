@@ -30,6 +30,69 @@ function logCarriers(){
     return creepType;
 }
 
+function maxSmallPieces(){
+    var extensions = Game.rooms[constants.ROOM.MINE].find(FIND_STRUCTURES, {
+        filter: (structure) => {
+            return structure.structureType == STRUCTURE_EXTENSION;
+        }
+    });
+    var totalCapacity=_.sum(extensions,(e) => e.store.getCapacity(RESOURCE_ENERGY))+Game.spawns[constants.SPAWN_NAME].store.getCapacity(RESOURCE_ENERGY);
+   return Math.floor(totalCapacity/50);
+}
+
+function spawnWorker(name, role){
+    var body=[];
+    for(let i=0, parts=0;parts<=(maxSmallPieces()-2);i+=2){
+        body[i]=MOVE;
+        body[i+1]=CARRY;
+        parts+=2;
+        if(parts<(teste-3)){
+            body[i+2]=WORK;
+            body[i+3]=MOVE;
+            i+=2;   
+            parts+=3;
+        }
+    }
+    spawnCreep(body, name,{role});
+}
+
+function spawnCarrier(name, role){
+    var body=[];
+    for(let i=0;i<maxSmallPieces() && (i+1)<maxSmallPieces();i+=2){
+        body[i]=MOVE;
+        body[i+1]=CARRY;
+    }
+    spawnCreep(body, name,{role});
+}
+
+function spawnCarrier(name, role, pos){
+    var body=[];
+    for(let i=0;i<maxSmallPieces() && (i+1)<maxSmallPieces();i+=2){
+        body[i]=MOVE;
+        body[i+1]=CARRY;
+    }
+    spawnCreep(body, name, {role:constants.ROLE.CARRIER, pos});
+}
+
+function spawnMiner(name, role){
+    var body=[];
+    for(let i=0;i<maxSmallPieces()/2 && (i+1)<maxSmallPieces()/2;i++){
+        body[i]=WORK;
+        if((i+1)<=maxSmallPieces()/2){
+            body[i+1]=MOVE;    
+        }
+    }
+    spawnCreep(body, name,{role});
+}
+
+function spawnCreep(body, name, mem){
+    var code = Game.spawns[constants.SPAWN_NAME].createCreep(body, name,mem);
+    if(code==ERR_NOT_ENOUGH_ENERGY){
+        var progress = calculateProgress();
+        console.log('Spawning a new '+name+', error code: '+code+' progress: '+progress+'%');
+    }
+}
+
 module.exports = {
     run: function(){
         var minersAlive = _.sum(Game.creeps, (creep) => (creep.memory.role == constants.ROLE.MINER &&
@@ -39,25 +102,27 @@ module.exports = {
         var miners = _.sum(Game.creeps, (creep) => creep.memory.role == constants.ROLE.MINER);
         var builders = _.sum(Game.creeps, (creep) => creep.memory.role == constants.ROLE.BUILDER);
         var upgraders = _.sum(Game.creeps, (creep) => creep.memory.role == constants.ROLE.UPGRADER);
+        var hostiles = Game.rooms[constants.ROOM.MINE].find(FIND_HOSTILE_CREEPS);
         
         console.log("Carriers: "+carriers+'\n'+logCarriers()+
                     "Miners: "+miners+'\n'+
                     "Upgraders: "+upgraders+'\n'+
                     "Builders: "+builders+'\n'+
-                    "Rechargers: "+rechargers+'\n');
-        var hostiles = Game.rooms[constants.ROOM.MINE].find(FIND_HOSTILE_CREEPS);
+                    "Rechargers: "+rechargers);
+                    
         var containers = Game.rooms[constants.ROOM.MINE].find(FIND_STRUCTURES, {
             filter: (structure) => {
                 return (structure.structureType == STRUCTURE_CONTAINER);
             }
         })
         if(hostiles.length>0 && soldiers<constants.MAX.SOLDIER){
+            console.log('Hostiles: '+hostiles);
             name= 'soldier_'+Game.time;
             if(soldiers==0){
-                Game.spawns[constants.SPAWN_NAME].createCreep([TOUGH, MOVE, MOVE, ATTACK], name,{role:constants.ROLE.SOLDIER});
+                spawnCreep([TOUGH, MOVE, MOVE, ATTACK], name,{role:constants.ROLE.SOLDIER});
                 return;
             }else{
-                Game.spawns[constants.SPAWN_NAME].createCreep([TOUGH,TOUGH, TOUGH, TOUGH, ATTACK, ATTACK, MOVE, MOVE, MOVE], name,{role:constants.ROLE.SOLDIER}); 
+                spawnCreep([TOUGH,TOUGH, TOUGH, TOUGH, ATTACK, ATTACK, MOVE, MOVE, MOVE], name,{role:constants.ROLE.SOLDIER}); 
                 return;
             }
         }
@@ -67,51 +132,28 @@ module.exports = {
         }
         if(minersAlive < constants.MAX.MINER){
             name = 'miner_' + Game.time;
-            var code = Game.spawns[constants.SPAWN_NAME].createCreep([WORK, WORK, WORK, WORK, MOVE], name,{role:constants.ROLE.MINER});
-            if(code==ERR_NOT_ENOUGH_ENERGY){
-                var progress = calculateProgress();
-                console.log('Spawning a new miner, error code: '+code+' progress: '+progress+'%');
-            }
+            spawnMiner(name, constants.ROLE.MINER);
         }else if(carriers < (constants.MAX.CARRIER.TYPE1+constants.MAX.CARRIER.TYPE2+constants.MAX.CARRIER.TYPE3)){
             name = 'carrier_' + Game.time;
-            var code = Game.spawns[constants.SPAWN_NAME].createCreep([MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY], name,{role:constants.ROLE.CARRIER});
-            if(code==ERR_NOT_ENOUGH_ENERGY){
-                var progress = calculateProgress();
-                console.log('Spawning a new carrier, error code: '+code+' progress: '+progress+'%');
-            }
+            spawnCarrier(name, constants.ROLE.CARRIER);
         }else if(rechargers < constants.MAX.RECHARGER){
             name = 'recharger_' + Game.time;
-            var code = Game.spawns[constants.SPAWN_NAME].createCreep([MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY], name,{role:constants.ROLE.RECHARGER});
-            if(code==ERR_NOT_ENOUGH_ENERGY){
-                var progress = calculateProgress();
-                console.log('Spawning a new recharger, error code: '+code+' progress: '+progress+'%');
-            }
+            spawnCarrier(name, constants.ROLE.RECHARGER);
         }else if(builders!=0 && upgraders< constants.MAX.UPGRADER){
             name = 'upgrader_' + Game.time;
-            var code = Game.spawns[constants.SPAWN_NAME].createCreep([MOVE, CARRY, MOVE, CARRY, WORK, MOVE, CARRY, WORK, MOVE], name,{role:constants.ROLE.UPGRADER});
-            if(code==ERR_NOT_ENOUGH_ENERGY){
-                var progress = calculateProgress();
-                console.log('Spawning a new upgrader, error code: '+code+' progress: '+progress+'%');
-            }
+            spawnWorker(name, constants.ROLE.UPGRADER);
         }else if(builders<constants.MAX.BUILDER){
             name = 'builder_' + Game.time;
-            var code = Game.spawns[constants.SPAWN_NAME].createCreep([MOVE, CARRY, MOVE, CARRY, WORK, MOVE, CARRY, WORK, MOVE], name,{role:constants.ROLE.BUILDER});
-            if(code==ERR_NOT_ENOUGH_ENERGY){
-                var progress = calculateProgress();
-                console.log('Spawning a new builder, error code: '+code+' progress: '+progress+'%');
-            }
+            spawnWorker(name, constants.ROLE.BUILDER);
         }else{
-            var fillingContainers = _.sum(containers, (container) => container.store[RESOURCE_ENERGY]>(container.store.getCapacity()/3));
+            var fillingContainers = _.sum(containers, (container) => container.store[RESOURCE_ENERGY]>(container.store.getCapacity()/4));
             if(fillingContainers>0){
                 name = 'default_' + constants.DEFAULT_SPAWN +"_"+Game.time;
-                Game.spawns[constants.SPAWN_NAME].createCreep([MOVE, CARRY, MOVE, CARRY, WORK, MOVE, CARRY, WORK, MOVE], name,{role:constants.DEFAULT_SPAWN});    
+                spawnWorker(name, constants.DEFAULT_SPAWN);
             }else{
                 name = 'carrier_' + Game.time;
-                Game.spawns[constants.SPAWN_NAME].createCreep([MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY], name,{role:constants.ROLE.CARRIER, pos:1});
+                spawnCarrier(name, constants.ROLE.RECHARGER, 1);
             }
-            
         }
-
     }
-
 };
