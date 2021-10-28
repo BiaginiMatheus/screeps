@@ -5,6 +5,7 @@ const roleCarrier = require('role.carrier');
 const roleBuilder = require('role.builder');
 const roleSoldier = require('role.soldier');
 const roleRecharger = require('role.recharger');
+const roleConqueror = require('role.conqueror');
 
 const spawner = require('creep.spawner');
 
@@ -32,11 +33,14 @@ module.exports.loop = function () {
             case constants.ROLE.SOLDIER:
                 roleSoldier.run(creep);
                 break;
+            case constants.ROLE.RECHARGER:
+                roleRecharger.run(creep);
+                break;
             case constants.ROLE.HERO:
                 roleHero.run(creep);
                 break;
-            case constants.ROLE.RECHARGER:
-                roleRecharger.run(creep);
+            case constants.ROLE.CONQUEROR:
+                roleConqueror.run(creep);
                 break;
             default:
                 console.log("Creep "+creep.name+" not working, role: "+creep.memory.role);
@@ -47,7 +51,8 @@ module.exports.loop = function () {
         }
     }
     if(!creep){
-        Game.spawns[constants.SPAWN_NAME].createCreep([MOVE, CARRY, WORK, WORK], 'the-choosen-one',{role:constants.ROLE.HERO});
+        console.log("Just this once, everybody lives!")
+        Game.spawns[constants.SPAWN_NAME].createCreep([MOVE, CARRY, WORK, WORK], 'The Doctor',{role:constants.ROLE.HERO});
     }else{
         spawner.run();
         var containers = creep.room.find(FIND_STRUCTURES, {
@@ -57,7 +62,7 @@ module.exports.loop = function () {
         })
         containers.forEach(container => console.log('Container capacity: '+container.store[RESOURCE_ENERGY]));
         console.log('Creep '+lessLife[1]+' is the closer to death, with '+lessLife[0]+' ticks remaining');
-        console.log('Room controller at '+(100*Game.rooms[constants.ROOM.MINE].controller.progress/(135000))+'% to the next level');
+        console.log('Room controller at '+(100*Game.rooms[constants.ROOM.MINE].controller.progress/(135000)).toFixed(2)+'% to the next level');
         console.log('=====================================================================================');
     }
 };

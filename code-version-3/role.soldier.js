@@ -1,5 +1,3 @@
-const wallNextRoom = new RoomPosition(10, 28, 'W42N37');
-
 module.exports = {
     run:function(creep){
         var hostile = creep.pos.findClosestByPath(FIND_HOSTILE_CREEPS);

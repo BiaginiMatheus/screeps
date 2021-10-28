@@ -6,19 +6,21 @@ module.exports = Object.freeze({
         BUILDER: 4,
         SOLDIER: 5,
         RECHARGER: 6,
-        HERO: 7
+        HERO: 7,
+        CONQUEROR:8
     },
     MAX:{
         MINER: 3,
         CARRIER: {
             TYPE1: 3,
-            TYPE2: 3,
-            TYPE3: 4
+            TYPE2: 4,
+            TYPE3: 3
         },
-        UPGRADER: 3,
-        BUILDER: 3,
+        UPGRADER: 6,
+        BUILDER: 4,
         SOLDIER: 2,
-        RECHARGER: 2
+        RECHARGER: 2,
+        TOTAL: 35
     },
     ID:{
         SPAWN:'6173664ccfad2826f0d140ee',
@@ -26,6 +28,10 @@ module.exports = Object.freeze({
         ENERGY_SRC2: '59f1a04182100e1594f366ae',
         ENERGY_SRC3: '59f1a04f82100e1594f36836',
         CONTAINER: '6174abcfb44c57192962c9a7'
+    },
+    OTHER_CONTROLLER:{
+        X:17,
+        Y:23
     },
     POS_MINE:{
         SRC1:{

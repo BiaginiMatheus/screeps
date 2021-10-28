@@ -64,7 +64,7 @@ module.exports = {
                     return;
                 }
             }
-            creep.moveTo(waitPos)
+            creep.moveTo()
             console.log("Creep "+creep.name+" is waiting for somewhere to harvest");
             return;
         }
@@ -81,7 +81,6 @@ module.exports = {
             }
         });
         const mining =[[resPos1, spawnAndExtensions], [resPos2, containers], [minePos3, containers]];
-        var targetToFill = creep.pos.findClosestByPath(mining[creep.memory.pos][1]);
         if(!creep.memory.working && utils.freePathToSpawn(creep)){
             var dropped = creep.room.find(FIND_DROPPED_RESOURCES,{
                 filter: (resource) => {
@@ -98,9 +97,9 @@ module.exports = {
                     creep.moveTo(mining[creep.memory.pos][0])
                 }
             }else{
-                dropped = creep.pos.findClosestByPath(FIND_DROPPED_RESOURCES);
-                if(dropped!=null && creep.pickup(dropped) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(dropped, {visualizePathStyle: {stroke: '#aaff00'}});
+               var dropped = creep.room.find(FIND_DROPPED_RESOURCES);
+                if(dropped!=null && dropped.length>0 && creep.pickup(dropped[0]) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(dropped[0], {visualizePathStyle: {stroke: '#aaff00'}});
                 }else{
                     failsafe(creep);
                     if(creep.pos.isEqualTo(minePos1) || creep.pos.isEqualTo(minePos1)){
@@ -108,11 +107,13 @@ module.exports = {
                     }
                 }
             }
-        }else if(utils.freePathToSpawn(creep) && creep.transfer(targetToFill, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
-            creep.moveTo(targetToFill);
+        }else if(creep.transfer((mining[creep.memory.pos][1])[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
+            creep.moveTo((mining[creep.memory.pos][1])[0]);
         }else{
             if(creep.room.name==constants.ROOM.RIGHT){
                 creep.moveTo(waitPos)
+            }else{
+                console.log('Something went werong with'+creep.name);
             }
         }
     }

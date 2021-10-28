@@ -89,7 +89,15 @@ function spawnCreep(body, name, mem){
     var code = Game.spawns[constants.SPAWN_NAME].createCreep(body, name,mem);
     if(code==ERR_NOT_ENOUGH_ENERGY){
         var progress = calculateProgress();
-        console.log('Spawning a new '+name+', error code: '+code+' progress: '+progress+'%');
+        console.log('Spawning a new '+name+', progress: '+progress+'%');
+    }
+}
+
+function spawnConqueror(){
+    var body=[CLAIM, MOVE];
+    if(Memory.rooms<2 && maxSmallPieces()>=13){
+        name='Star Lord'
+        spawnCreep(body, name,{role:constants.ROLE.CONQUEROR}); 
     }
 }
 
@@ -106,7 +114,11 @@ module.exports = {
         var upgraders = _.sum(Game.creeps, (creep) => creep.memory.role == constants.ROLE.UPGRADER);
         var hostiles = Game.rooms[constants.ROOM.MINE].find(FIND_HOSTILE_CREEPS);
         
-        console.log("Carriers: "+(carriers1+carriers2+carriers3)+'\n'+logCarriers()+
+        var carriers = carriers1+carriers2+carriers3;
+        
+        var totalCreeps = carriers+rechargers+miners+builders+upgraders;
+        
+        console.log("Carriers: "+carriers+'\n'+logCarriers()+
                     "Miners: "+miners+'\n'+
                     "Upgraders: "+upgraders+'\n'+
                     "Builders: "+builders+'\n'+
@@ -148,6 +160,10 @@ module.exports = {
             name = 'builder_' + Game.time;
             spawnWorker(name, constants.ROLE.BUILDER);
         }else{
+            if(totalCreeps>constants.MAX.TOTAL){
+                console.log('The room is full, Gallifrey falls no more');
+                return;
+            }
             var fillingContainers = _.sum(containers, (container) => container.store[RESOURCE_ENERGY]>(container.store.getCapacity()/4));
             if(fillingContainers>0){
                 name = 'default_' + constants.DEFAULT_SPAWN +"_"+Game.time;

@@ -15,7 +15,8 @@ module.exports.freePathToSpawn = (creep) => {
     
     if(isAtSpawnZone(creep) && creepsCloseSpawn>constants.MAX_PROX_SPAWN &&
         ((minersMining<2 || miners>constants.MAX.MINER) || 
-        Game.spawns[constants.SPAWN_NAME].spawning!=null)){
+        Game.spawns[constants.SPAWN_NAME].spawning!=null ||
+        creepsCloseSpawn>(constants.MAX_PROX_SPAWN+4))){
         creep.moveTo(waitPos);
         return false;
     }
